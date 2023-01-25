@@ -16,6 +16,7 @@ var x = d3.scaleTime()
     .domain(d3.extent(data, function (d) { return d.value; }))
     .range([0, width]);
 
+
 var y = d3.scaleLinear()
     .range([0, height])
     .domain([0, d3.max(data, function (d) { return d.date; })]);
@@ -73,4 +74,3 @@ svg.append("g")
     .attr("class", "x axis")
     .attr("transform", "translate(0," + height + ")")
     .call(xAxis);
-
