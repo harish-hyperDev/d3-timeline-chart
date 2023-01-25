@@ -22,6 +22,8 @@ var y = d3.scaleLinear()
     .domain([0, d3.max(data, function (d) { return d.date; })]);
 
 var xAxis = d3.axisBottom(x)
+                // .ticks((d) => console.log(d))
+                // .tickSize(20)
 // var yAxis = d3.axisLeft(y);
 
 var tooltip = d3.select("body")

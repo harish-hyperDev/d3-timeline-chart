@@ -6,21 +6,24 @@ const fetchData = async () => {
     return await fetch('./src/data.json').then(res => { return res.json() }).then(resData => { return resData })
 }
 
+let parseTime = d3.timeParse("%d %b %Y %H:%M %p");
+console.log(parseTime("22 May 2022 10:56 PM"))
+
 var result = fetchData()
     .then(data => {
-
-        var start = 100, end = 200
+        
         var x = d3.scaleTime()
-            .domain([new Date(start * 1000), new Date(end * 1000)])
+            .domain(d3.extent(data, function (d) { return parseTime(d.InstallDate); }))
             .range([0, width]);
 
-        var y = d3.scaleLinear()
-            .range([0, height])
-            .domain([0, d3.max(data, function (d) { return d.date; })]);
+        // var y = d3.scaleLinear()
+        //     .range([0, height])
+        //     .domain([0, d3.max(data, function (d) { return d.date; })]);
 
         var xAxis = d3.axisBottom(x)
-                    .ticks(d3.timeDay.every(1), '%-d/%-m/%Y')
-        var yAxis = d3.axisLeft(y);
+                    .ticks(d3.timeDay.every(1))
+                    
+        // var yAxis = d3.axisLeft(y);
 
         var tooltip = d3.select("body")
             .append("div")
@@ -43,21 +46,24 @@ var result = fetchData()
 
         svg.selectAll(".dot")
             .data(data)
-            .enter().append("circle")
+            .enter().append("circle")        
             .attr("class", "dot")
-            .attr("cx", function (d) { return x(d.InstallDate); })
-            .attr("cy", function (d) { return y(d.InstallDate) })
-            .attr("r", 5)
+            .attr("cx", function (d) { return x(parseTime(d.InstallDate)); })
+            .attr("cy", function (d) { return (height) })
+            .attr("fill", "red")            
+            .attr("r", 4)
             .on("mouseover", (d) => {
                 svg.selectAll(".dot").style("cursor", "pointer");
                 svg.select("path").style("cursor", "pointer");
-                tooltip.text(d.name);
+                tooltip.text(
+                        `ComputerName: ${d.ComputerName}`
+                        );
                 return tooltip.style("visibility", "visible");
             })
 
             .on("mousemove", () => {
 
-                return tooltip.style("top", (d3.event.pageY - 30) + "px")
+                return tooltip.style("top", (d3.event.pageY - 40) + "px")
                     .style("left", (d3.event.pageX - 15) + "px")
 
             })
