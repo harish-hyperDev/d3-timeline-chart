@@ -222,6 +222,46 @@
         "PatchReleaseDate": "03 May 2022"
     },
     {
+        "InstallDate": "05 May 2022 08:01 PM",
+        "ComputerName": "SACHIN",
+        "Policy": "Manual",
+        "Group": "Default",
+        "Tags": "",
+        "Patch Name": "Security Intelligence Update for Microsoft Defender Antivirus - KB2267602 (Version 1.363.1353.0)",
+        "PatchCategory": "Definition Update",
+        "PatchReleaseDate": "03 May 2022"
+    },
+    {
+        "InstallDate": "07 May 2022 08:01 PM",
+        "ComputerName": "SACHIN",
+        "Policy": "Manual",
+        "Group": "Default",
+        "Tags": "",
+        "Patch Name": "Security Intelligence Update for Microsoft Defender Antivirus - KB2267602 (Version 1.363.1353.0)",
+        "PatchCategory": "Definition Update",
+        "PatchReleaseDate": "03 May 2022"
+    },
+    {
+        "InstallDate": "09 May 2022 08:01 PM",
+        "ComputerName": "SACHIN",
+        "Policy": "Manual",
+        "Group": "Default",
+        "Tags": "",
+        "Patch Name": "Security Intelligence Update for Microsoft Defender Antivirus - KB2267602 (Version 1.363.1353.0)",
+        "PatchCategory": "Definition Update",
+        "PatchReleaseDate": "03 May 2022"
+    },
+    {
+        "InstallDate": "11 May 2022 08:01 PM",
+        "ComputerName": "SACHIN",
+        "Policy": "Manual",
+        "Group": "Default",
+        "Tags": "",
+        "Patch Name": "Security Intelligence Update for Microsoft Defender Antivirus - KB2267602 (Version 1.363.1353.0)",
+        "PatchCategory": "Definition Update",
+        "PatchReleaseDate": "03 May 2022"
+    },
+    {
         "InstallDate": "03 May 2022 02:35 PM",
         "ComputerName": "DESKTOP-EHHJT6H",
         "Policy": "Manual",
