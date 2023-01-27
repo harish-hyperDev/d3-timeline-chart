@@ -30,6 +30,9 @@ var result = fetchData()
         
         var filteredDropdownData = data;
         var filteredTimeline = data;
+        let firstPageLoad = true
+
+        firstPageLoad && (document.getElementById("updates").innerHTML = 0);
 
         const getUniqueData = (key) => {
             return filteredDropdownData.map((x) => x[key]).filter((x, i, a) => a.indexOf(x) === i)
@@ -82,16 +85,18 @@ var result = fetchData()
                 .on("mouseover", (d) => {
                     svg.selectAll(".dot").style("cursor", "pointer");
                     svg.select("path").style("cursor", "pointer");
-                    tooltip.text(`
-                        ComputerName: ${d.ComputerName} <br/>
-                        Hello
-                    `);
+                    tooltip.text(                        
+                        "Patch Name: " + d["Patch Name"] + "\n" +
+                        "Patch Release: " + d["PatchReleaseDate"] + "\n" +
+                        "Patch Installed On: " + d["InstallDate"] + "\n" + 
+                        "Patch Category: " + d["PatchCategory"] + "\n"                        
+                    );
                     return tooltip.style("visibility", "visible");
                 })
 
                 .on("mousemove", () => {
 
-                    return tooltip.style("top", (d3.event.pageY - 40) + "px")
+                    return tooltip.style("top", (d3.event.pageY + 25) + "px")
                         .style("left", (d3.event.pageX - 15) + "px")
 
                 })
@@ -129,72 +134,19 @@ var result = fetchData()
         // console.log(uniqueDates)
 
         console.log("dropdown ", filteredDropdownData)
-        let x = d3.scaleTime()
-            .domain(d3.extent(filteredTimeline, function (d) { return parseTime(d.InstallDate) }))
-            .range([0, width]);
+        // let x = d3.scaleTime()
+        //     .domain(d3.extent(filteredTimeline, function (d) { return parseTime(d.InstallDate); }))
+        //     .range([0, width]);
 
         // var y = d3.scaleLinear()
         //     .range([0, height])
         //     .domain([0, d3.max(data, function (d) { return d.date; })]);
         // var yAxis = d3.axisLeft(y);
         
-        let xAxis = d3.axisBottom(x)
+        // let xAxis = d3.axisBottom(x)
         // .ticks(d3.timeHour.every(12))
 
         
-
-        // Inserting data to dropdown
-        var dropDown = d3.select("select")
-        var options = dropDown.selectAll("option")
-                                .data(uniqueComputers)
-                                .enter()
-                                .append("option")
-                                            
-            options.text((d) => d)
-                    .attr("value", (d) => d)
-
-            dropDown.on("change", function () { reDraw(d3.select(this).property("value")) })
-
-            // filterData(d3.select(this).property("value"))
-
-        var svg = d3.select("#timeline-chart").append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-            .append("g")
-            .attr("class", "fishy")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-        svg.selectAll(".dot")
-            .data(data)
-            .enter().append("circle")
-            .attr("class", "dot")
-            .attr("cx", function (d) { return x(parseTime(d.InstallDate)); })
-            .attr("cy", function (d) { return (height) })
-            .attr("fill", "red")
-            .attr("r", 4)
-            .on("mouseover", (d) => {
-                svg.selectAll(".dot").style("cursor", "pointer");
-                svg.select("path").style("cursor", "pointer");
-                tooltip.text(
-                    "ComputerName: " + d.ComputerName + "<br/>" +
-                    "Hello"
-                );
-                return tooltip.style("visibility", "visible");
-            })
-
-            .on("mousemove", () => {
-
-                return tooltip.style("top", (d3.event.pageY - 40) + "px")
-                    .style("left", (d3.event.pageX - 15) + "px")
-
-            })
-
-            .on("mouseout", () => {
-                svg.selectAll(".dot").style("cursor", "default");
-                svg.select("path").style("cursor", "default");
-                return tooltip.style("visibility", "hidden")
-            });
-
         var tooltip = d3.select("body")
             .append("div")
             .attr('class', 'tooltip')
@@ -206,12 +158,35 @@ var result = fetchData()
             .style("border-radius", "7px")
             .text("");
 
-        svg.append("g")
-            .attr("class", "x-axis")
-            .attr("transform", "translate(0," + height + ")")
-            .call(xAxis);
+        // Inserting data to dropdown
+        var dropDown = d3.select("select")
+        var options = dropDown.selectAll("option")
+                                .data(function () {
+                                    if(firstPageLoad) {
+                                        firstPageLoad = false
+                                        console.log("if true block")
+                                        return (["---Select---", ...uniqueComputers])
+                                    }
+                                    else {
+                                        console.log("else block")
+                                        return (uniqueComputers)
 
+                                    }
+                                })
+                                .enter()
+                                .append("option")
+                                            
+            options.text((d) => d)
+                    .attr("value", (d) => d)
 
+            dropDown.on("change", function () { reDraw(d3.select(this).property("value")) })
+
+        var svg = d3.select("#timeline-chart").append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("class", "fishy")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
         // console.log(data)
     })

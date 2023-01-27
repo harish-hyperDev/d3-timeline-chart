@@ -1,3 +1,8 @@
 body div {
     margin: 5px 0px;
 }
+
+.tooltip {
+    border: 1px solid rgb(203, 203, 203);
+    white-space: pre-wrap;
+}
