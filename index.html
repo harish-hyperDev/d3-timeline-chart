@@ -6,9 +6,17 @@
         <script src="https://cdn.jsdelivr.net/npm/d3-time-format@4"></script>
     </head>
     <body>
-        <label style="margin-left: 40px">Computer Name:</label>
-        <select type="text" style="margin-top: 40px">
-        </select>
+        <div style="display: flex; flex-direction: column;">
+            <div>
+                <label style="margin-left: 40px">Computer Name:</label>
+                <select type="text" style="margin-top: 40px"></select>
+            </div>
+            
+            <div>
+                <label style="margin-left: 40px">Total Updates:</label>
+                <span id="updates"></span>
+            </div>
+        </div>
         <div id="timeline-chart"></div>
     </body>
     <script src="./src/experimental.js"></script>
