@@ -6,3 +6,12 @@ body div {
     border: 1px solid rgb(203, 203, 203);
     white-space: pre-wrap;
 }
+
+.domain {
+    position: relative !important;
+    z-index: 2;
+}
+/* 
+.dot {
+    border: 5px solid black;
+} */

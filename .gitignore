@@ -1,2 +1,4 @@
 .env
 /src/*.json
+.notes
+.notes.md
