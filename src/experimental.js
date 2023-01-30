@@ -3,8 +3,6 @@ var margin = { top: 20, right: 20, bottom: 30, left: 50 },
     height = 350 - margin.top - margin.bottom;
 
 
-
-
 const fetchData = async () => {
     return await fetch('./src/originalData.json').then(res => { return res.json() }).then(resData => { return resData })
 }
@@ -40,10 +38,8 @@ var result = fetchData()
             return filteredDropdownData.map((x) => x[key]).filter((x, i, a) => a.indexOf(x) === i)
         }
 
-        const extent = [[margin.left, margin.top], [width - margin.right, height - margin.top]];
 
         const zoom = d3.zoom().on("zoom", () => svg.select(".x-axis").call(customizedXTicks, d3.event.transform.rescaleX(xScale2)))
-
         .scaleExtent([-Infinity, Infinity]);
 
         function customizedXTicks(selection, scale) {
@@ -94,22 +90,7 @@ var result = fetchData()
             .attr("transform", "translate(0," + height + ")")
             .call(d3.axisBottom(x));
 
-        function zoomed() {
-
-            var newX = d3.event.transform.rescaleX(x);
-            // var newY = d3.event.transform.rescaleY(y);
-
-            // update axes with these new boundaries
-            console.log(newX)
-            xAxis.call(d3.axisBottom(newX))
-            // yAxis.call(d3.axisLeft(newY))
-
-            // update circle position
-
-            svg.selectAll("circle")
-                .attr('cx', function (d) { console.log(d); return newX(d.InstallDate) })
-            // .attr('cy', function (d) { return newY(d.Petal_Length) });
-        }
+        
 
 
 
