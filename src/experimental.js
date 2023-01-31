@@ -133,7 +133,7 @@ var result = fetchData()
                 .on("mousemove", () => {
 
                     return tooltip.style("top", (d3.event.pageY + 25) + "px")
-                        .style("left", (d3.event.pageX - 15) + "px")
+                                    .style("left", (d3.event.pageX - 15) + "px")
 
                 })
 
@@ -165,28 +165,28 @@ var result = fetchData()
         // Inserting data to dropdown
         var dropDown = d3.select("select")
         var options = dropDown.selectAll("option")
-            .data(function () {
-                if (firstPageLoad) {
+                                .data(function () {
+                                    if (firstPageLoad) {
+                                        firstPageLoad = false
+                                        console.log("if true block")
+                                        return (["---Select---", ...uniqueComputers])
+                                    }
+                                    else {
+                                        console.log("else block")
+                                        return (uniqueComputers)
+
+                                    }
+                                })
+                                .enter()
+                                .append("option")
+
+            options.text((d) => d)
+                .attr("value", (d) => d)
+
+            dropDown.on("change", function () {
+                if (firstPageLoad)
                     firstPageLoad = false
-                    console.log("if true block")
-                    return (["---Select---", ...uniqueComputers])
-                }
-                else {
-                    console.log("else block")
-                    return (uniqueComputers)
 
-                }
+                reDraw(d3.select(this).property("value"))
             })
-            .enter()
-            .append("option")
-
-        options.text((d) => d)
-            .attr("value", (d) => d)
-
-        dropDown.on("change", function () {
-            if (firstPageLoad)
-                firstPageLoad = false
-
-            reDraw(d3.select(this).property("value"))
-        })
     })
