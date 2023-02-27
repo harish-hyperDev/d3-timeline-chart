@@ -24,16 +24,15 @@ var result = fetchData()
         let uniqueComputers = getUniqueData("ComputerName").sort()
 
         console.log("unique computers ", uniqueComputers)
-        // height = ((multidata_index + 1)*100) - margin.top - margin.bottom;
         
-        // console.log("unique data ", getUniqueData)
-
+        
         // start loop
-        // for(let multidata_index=0; multidata_index < data.length; multidata_index++) {
+        for(let multidata_index=0; multidata_index < uniqueComputers.length; multidata_index++) {
             var margin = { top: 20, right: 20, bottom: 30, left: 50 },
             width = 1200,
             height = 100 - margin.top - margin.bottom;                
-
+            // height = ((multidata_index + 1)*100) - margin.top - margin.bottom;
+            
 
             // Reference of the JSON data structure
             /* {
@@ -73,11 +72,12 @@ var result = fetchData()
                 
                 console.log(filteredTimeline)
 
-                d3.selectAll(".dot").remove()
-                d3.selectAll(".x-axis").remove()
+                // removes
+                /* d3.selectAll(".dot").remove()
+                d3.selectAll(".x-axis").remove() */
 
                 
-                document.getElementById("updates").innerHTML = filteredTimeline.length;
+                // document.getElementById("updates").innerHTML = filteredTimeline.length;
 
                 svg.selectAll(".dot")
                     .data(filteredTimeline)
@@ -86,9 +86,9 @@ var result = fetchData()
                     .attr("cx", function (d) { return x(parseTime(d.InstallDate)) })
                     .attr("cy", function (d) { return (height) })
                     .attr("fill", "#fff")
-                    .attr("r", 3.5)
+                    .attr("r", 2.5)
                     .attr("stroke", "black")
-                    .attr("stroke-width", "2.5")
+                    .attr("stroke-width", "1.5")
                     .on("mouseover", (d) => {
                         svg.selectAll(".dot").style("cursor", "pointer");
                         svg.select("path").style("cursor", "pointer");
@@ -126,7 +126,9 @@ var result = fetchData()
             
             // const uniqueDates = getUniqueData("InstallDate")
 
-            console.log("dropdown ", filteredDropdownData)
+
+
+            // console.log("dropdown ", filteredDropdownData)
          
             var tooltip = d3.select("body")
                 .append("div")
@@ -140,46 +142,25 @@ var result = fetchData()
                 .text("");
 
             // Inserting data to dropdown
-            /* var dropDown = d3.select("select")
-            var options = dropDown.selectAll("option")
-                                    .data(function () {
-                                        if(firstPageLoad) {
-                                            firstPageLoad = false
-                                            console.log("if true block")
-                                            return (["---Select---", ...uniqueComputers])
-                                        }
-                                        else {
-                                            console.log("else block")
-                                            return (uniqueComputers)
 
-                                        }
-                                    })
-                                    .enter()
-                                    .append("option")
-                                                
-                options.text((d) => d)
-                        .attr("value", (d) => d)
-
-                dropDown.on("change", function () { reDraw(d3.select(this).property("value")) }) */
-
-            /* var svg = d3.select("#timeline-chart").append("svg")
-                        .attr("width", width + margin.left + margin.right)
-                        .attr("height", height + margin.top + margin.bottom)
-                        .append("g")
-                        .attr("class", "fishy")
-                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")"); */
+            d3.select("body").append("div").attr("class", `computer-id${multidata_index} computer-names`)
+            document.getElementsByClassName(`computer-id${multidata_index}`)[0].innerHTML = `Computer Name: ${uniqueComputers[multidata_index]}`
+            // $(this).select(`.computer-id${multidata_index}`).innerHTML = uniqueComputers[multidata_index]
 
             var svg = d3.select("body")
                         .append("div")
-                        .attr("id", `timeline-chart`)
+                        .attr("class", "timeline")
+                        .attr("id", `timeline-chart${multidata_index}`)
                             .append("svg")
                             .attr("width", width + margin.left + margin.right)
                             .attr("height", height + margin.top + margin.bottom)
                             .append("g")
                             .attr("class", "fishy")
                             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                    
 
             
-
-        // }
+            reDraw(uniqueComputers[multidata_index])
+            // reDraw()
+        }
     })
