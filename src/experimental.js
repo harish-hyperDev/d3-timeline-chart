@@ -17,22 +17,87 @@ var result = fetchData()
 
         // console.log("data length ", data.length)
         // console.log("loading ", data[multidata_index]['ComputerName'])
-        
+
+        function HSVtoRGB(h, s, v) {
+            var r, g, b, i, f, p, q, t;
+            if (arguments.length === 1) {
+                s = h.s, v = h.v, h = h.h;
+            }
+            i = Math.floor(h * 6);
+            f = h * 6 - i;
+            p = v * (1 - s);
+            q = v * (1 - f * s);
+            t = v * (1 - (1 - f) * s);
+            switch (i % 6) {
+                case 0: r = v, g = t, b = p; break;
+                case 1: r = q, g = v, b = p; break;
+                case 2: r = p, g = v, b = t; break;
+                case 3: r = p, g = q, b = v; break;
+                case 4: r = t, g = p, b = v; break;
+                case 5: r = v, g = p, b = q; break;
+            }
+            return {
+                r: Math.round(r * 255),
+                g: Math.round(g * 255),
+                b: Math.round(b * 255)
+            };
+        }
+
+        function randomColors(total) {
+            var i = 360 / (total - 1); // distribute the colors evenly on the hue range
+            var r = []; // hold the generated colors
+            for (var x = 0; x < total; x++) {
+                r.push(HSVtoRGB(i * x, 100, 100)); // you can also alternate the saturation and value for even more contrast between the colors
+            }
+            return r;
+        }
+
         const getUniqueData = (key) => {
             return data.map((x) => x[key]).filter((x, i, a) => a.indexOf(x) === i)
         }
+
         let uniqueComputers = getUniqueData("ComputerName").sort()
 
+        let uniqueUpdates = data.map(d => {
+            let space_count = 0;
+            let third_space_index = 0;
+            let str = d["Patch Name"]
+
+            for (let str_i = 0; str_i < str.length; str_i++) {
+                if (space_count === 3) {
+                    third_space_index = str_i;
+                    break;
+                }
+                if (str[str_i] === " ")
+                    space_count++
+            }
+
+            console.log("third space index ", third_space_index)
+            console.log("patches ", d["Patch Name"]);
+
+            return (str.slice(0, third_space_index))
+        }).filter((x, i, a) => a.indexOf(x) === i)
+
+        let uniqueColors = randomColors(uniqueUpdates.length)
+
+        console.log("unique updates ", uniqueUpdates)
+        console.log("unique colors ", uniqueColors)
+
+
+
+
+        // console.log("derived string ", str.slice(0,29))
+
         console.log("unique computers ", uniqueComputers)
-        
-        
+
+
         // start loop
-        for(let multidata_index=0; multidata_index < uniqueComputers.length; multidata_index++) {
+        for (let multidata_index = 0; multidata_index < uniqueComputers.length; multidata_index++) {
             var margin = { top: 20, right: 20, bottom: 30, left: 50 },
-            width = 1200,
-            height = 100 - margin.top - margin.bottom;                
+                width = 1200,
+                height = 50 - margin.top - margin.bottom;
             // height = ((multidata_index + 1)*100) - margin.top - margin.bottom;
-            
+
 
             // Reference of the JSON data structure
             /* {
@@ -44,9 +109,9 @@ var result = fetchData()
                 "Patch Name": "Security Intelligence Update for Microsoft Defender Antivirus - KB2267602 (Version 1.363.1567.0)",
                 "PatchCategory": "Definition Update",
                 "PatchReleaseDate": "07 May 2022"
-            } */        
+            } */
 
-            
+
             var filteredDropdownData = data;
             var filteredTimeline = data;
             let firstPageLoad = true
@@ -55,8 +120,8 @@ var result = fetchData()
             const reDraw = (param) => {
                 console.log("filtering ->", param)
 
-                
-                filteredTimeline = data.filter((d,i) => {
+
+                filteredTimeline = data.filter((d, i) => {
                     return d["ComputerName"] === param
                 })
 
@@ -64,19 +129,19 @@ var result = fetchData()
 
                 var x = d3.scaleTime()
                     .domain(d3.extent(filteredTimeline, function (d) { return parseTime(d.InstallDate); }))
-                    .range([0, width]); 
+                    .range([0, width]);
 
                 var xAxis = d3.axisBottom(x)
-                    // .ticks(d3.timeHour.every(12))
+                // .ticks(d3.timeHour.every(12))
 
-                
+
                 console.log(filteredTimeline)
 
                 // removes
                 /* d3.selectAll(".dot").remove()
                 d3.selectAll(".x-axis").remove() */
 
-                
+
                 // document.getElementById("updates").innerHTML = filteredTimeline.length;
 
                 svg.selectAll(".dot")
@@ -92,11 +157,11 @@ var result = fetchData()
                     .on("mouseover", (d) => {
                         svg.selectAll(".dot").style("cursor", "pointer");
                         svg.select("path").style("cursor", "pointer");
-                        tooltip.text(                        
+                        tooltip.text(
                             "Patch Name: " + d["Patch Name"] + "\n" +
                             "Patch Release: " + d["PatchReleaseDate"] + "\n" +
-                            "Patch Installed On: " + d["InstallDate"] + "\n" + 
-                            "Patch Category: " + d["PatchCategory"] + "\n"                        
+                            "Patch Installed On: " + d["InstallDate"] + "\n" +
+                            "Patch Category: " + d["PatchCategory"] + "\n"
                         );
                         return tooltip.style("visibility", "visible");
                     })
@@ -118,18 +183,18 @@ var result = fetchData()
                     .attr("class", "x-axis")
                     .attr("transform", "translate(0," + height + ")")
                     .call(xAxis);
-            }        
+            }
 
             // filterData()
 
             // For retrieving unique values from JSON data
-            
+
             // const uniqueDates = getUniqueData("InstallDate")
 
 
 
             // console.log("dropdown ", filteredDropdownData)
-         
+
             var tooltip = d3.select("body")
                 .append("div")
                 .attr('class', 'tooltip')
@@ -143,23 +208,27 @@ var result = fetchData()
 
             // Inserting data to dropdown
 
-            d3.select("body").append("div").attr("class", `computer-id${multidata_index} computer-names`)
-            document.getElementsByClassName(`computer-id${multidata_index}`)[0].innerHTML = `Computer Name: ${uniqueComputers[multidata_index]}`
+            d3.select("body").append("div").attr("class", `timeline${multidata_index}`)
+            d3.select(`.timeline${multidata_index}`).append("div").attr("class", `computer-id${multidata_index} computer-names`)
+            document.getElementsByClassName(`computer-id${multidata_index}`)[0].innerHTML = `${uniqueComputers[multidata_index]}`
             // $(this).select(`.computer-id${multidata_index}`).innerHTML = uniqueComputers[multidata_index]
 
-            var svg = d3.select("body")
-                        .append("div")
-                        .attr("class", "timeline")
-                        .attr("id", `timeline-chart${multidata_index}`)
-                            .append("svg")
-                            .attr("width", width + margin.left + margin.right)
-                            .attr("height", height + margin.top + margin.bottom)
-                            .append("g")
-                            .attr("class", "fishy")
-                            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-                    
+            var svg = d3.select(`.timeline${multidata_index}`)
+                .append("div")
+                .attr("id", `timeline-chart${multidata_index}`)
+                .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("class", "fishy")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-            
+
+            d3.select(`.timeline${multidata_index}`)
+                .style("border", "1px solid black")
+                .style("margin", "5px 20px")
+                .style("border-radius", "7px")
+
             reDraw(uniqueComputers[multidata_index])
             // reDraw()
         }

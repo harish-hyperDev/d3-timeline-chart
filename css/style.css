@@ -9,7 +9,10 @@ body div {
 }
 
 .computer-names {
-    margin-top: 5%;
+    margin-top: 10px;
     margin-left: 2.7%;
 }
 
+/* .timeline {
+    border: 1px solid black;
+} */
