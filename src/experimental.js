@@ -1,10 +1,4 @@
 
-
-
-
-
-
-
 const fetchData = async () => {
     return await fetch('./src/originalData.json').then(res => { return res.json() }).then(resData => { return resData })
 }
@@ -17,6 +11,8 @@ var result = fetchData()
 
         // console.log("data length ", data.length)
         // console.log("loading ", data[multidata_index]['ComputerName'])
+
+
 
         function HSVtoRGB(h, s, v) {
             var r, g, b, i, f, p, q, t;
@@ -72,8 +68,8 @@ var result = fetchData()
                     space_count++
             }
 
-            console.log("third space index ", third_space_index)
-            console.log("patches ", d["Patch Name"]);
+            // console.log("third space index ", third_space_index)
+            // console.log("patches ", d["Patch Name"]);
 
             return (str.slice(0, third_space_index))
         }).filter((x, i, a) => a.indexOf(x) === i)
@@ -84,18 +80,36 @@ var result = fetchData()
         console.log("unique colors ", uniqueColors)
 
 
-
-
         // console.log("derived string ", str.slice(0,29))
 
         console.log("unique computers ", uniqueComputers)
+        console.log("ineer ", window.innerWidth)
+        
+
+        var margin = { top: 20, right: 20, bottom: 30, left: 50 }
 
 
-        // start loop
+        /* default_width = 700 - margin.left - margin.right;
+        default_height = 10;
+        default_ratio = default_width / default_height; */
+
+        current_width = window.innerWidth;
+        current_height = 10;
+        current_ratio = current_width / current_height;
+
+        // var width = current_ratio > default_ratio ? default_width : current_width,
+        var width, height;
+
+        // width is default as window width, later resized w.r.t to width of div(check last lines of code)
+        width = current_width - margin.left - margin.right
+        height = current_height;
+
+
+        // start loop for multi timelines
         for (let multidata_index = 0; multidata_index < uniqueComputers.length; multidata_index++) {
-            var margin = { top: 20, right: 20, bottom: 30, left: 50 },
-                width = 1200,
-                height = 50 - margin.top - margin.bottom;
+
+            // width = 1200,
+            // height = 50 - margin.top - margin.bottom;
             // height = ((multidata_index + 1)*100) - margin.top - margin.bottom;
 
 
@@ -118,24 +132,25 @@ var result = fetchData()
 
 
             const reDraw = (param) => {
-                console.log("filtering ->", param)
 
 
                 filteredTimeline = data.filter((d, i) => {
                     return d["ComputerName"] === param
                 })
 
-                console.log(d3.extent(filteredTimeline, function (d) { return parseTime(d.InstallDate); }))
+                // console.log(d3.extent(filteredTimeline, function (d) { return parseTime(d.InstallDate); }))
 
                 var x = d3.scaleTime()
                     .domain(d3.extent(filteredTimeline, function (d) { return parseTime(d.InstallDate); }))
-                    .range([0, width]);
+                    .range([0, width - margin.left - margin.right]);
+                    // .range([0, parseInt(d3.select(`.timeline${multidata_index}`).style('width'), 10)]);
+                
 
                 var xAxis = d3.axisBottom(x)
                 // .ticks(d3.timeHour.every(12))
 
 
-                console.log(filteredTimeline)
+                // console.log(filteredTimeline)
 
                 // removes
                 /* d3.selectAll(".dot").remove()
@@ -228,6 +243,15 @@ var result = fetchData()
                 .style("border", "1px solid black")
                 .style("margin", "5px 20px")
                 .style("border-radius", "7px")
+
+            console.log("div width ", $(`.timeline${multidata_index}`).width())
+
+            document.getElementsByClassName(`timeline${multidata_index}`)[0].style.resize = "horizontal"
+
+
+            // changing width of chart w.r.t to width of div
+            width = $(`.timeline${multidata_index}`).width() - margin.right
+            
 
             reDraw(uniqueComputers[multidata_index])
             // reDraw()
