@@ -80,7 +80,7 @@ var result = fetchData()
                 .attr("class", "dot")   // x(parseTime(d.InstallDate));
                 .attr("cx", function (d) { return x(parseTime(d.InstallDate)) })
                 .attr("cy", function (d) { return (height) })
-                .attr("fill", "red")
+                .attr("fill", "black")
                 .attr("r", 4)
                 .on("mouseover", (d) => {
                     svg.selectAll(".dot").style("cursor", "pointer");
