@@ -172,22 +172,24 @@ var result = fetchData()
                     .on("mouseover", (d) => {
                         svg.selectAll(".dot").style("cursor", "pointer");
                         svg.select("path").style("cursor", "pointer");
-                        tooltip.text(
-                            "Patch Name: " + d["Patch Name"] + "\n" +
-                            "Patch Release: " + d["PatchReleaseDate"] + "\n" +
-                            "Patch Installed On: " + d["InstallDate"] + "\n" +
-                            "Patch Category: " + d["PatchCategory"] + "\n"
-                        );
+    
+                        tooltip.html(`
+                                <strong>Patch Name: </strong>${d["Patch Name"]} <br/> 
+                                <strong>Patch Release: </strong>${d["PatchReleaseDate"]} <br/>
+                                <strong>Patch Installed On: </strong>${d["InstallDate"]} <br/>
+                                <strong>Patch Category: </strong>${d["PatchCategory"]}
+                            `);
+    
                         return tooltip.style("visibility", "visible");
                     })
-
+    
                     .on("mousemove", () => {
-
+    
                         return tooltip.style("top", (d3.event.pageY + 25) + "px")
                             .style("left", (d3.event.pageX - 15) + "px")
-
+    
                     })
-
+    
                     .on("mouseout", () => {
                         svg.selectAll(".dot").style("cursor", "default");
                         svg.select("path").style("cursor", "default");
@@ -229,25 +231,25 @@ var result = fetchData()
             // $(this).select(`.computer-id${multidata_index}`).innerHTML = uniqueComputers[multidata_index]
 
             var svg = d3.select(`.timeline${multidata_index}`)
-                .append("div")
-                .attr("id", `timeline-chart${multidata_index}`)
-                .append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-                .append("g")
-                .attr("class", "fishy")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                        .style("overflow", "hidden")
+                        .style("resize", "horizontal")
+                        .append("div")
+                        .attr("id", `timeline-chart${multidata_index}`)
+                        .append("svg")
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + margin.top + margin.bottom)
+                        .append("g")
+                        .attr("class", "fishy")
+                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 
             d3.select(`.timeline${multidata_index}`)
                 .style("border", "1px solid black")
                 .style("margin", "5px 20px")
                 .style("border-radius", "7px")
+                .style("resize", "horizontal")
 
             console.log("div width ", $(`.timeline${multidata_index}`).width())
-
-            document.getElementsByClassName(`timeline${multidata_index}`)[0].style.resize = "horizontal"
-
 
             // changing width of chart w.r.t to width of div
             width = $(`.timeline${multidata_index}`).width() - margin.right
