@@ -7,7 +7,7 @@ let parseTime = d3.timeParse("%d %b %Y %H:%M %p");
 console.log(parseTime("22 May 2022 10:56 PM"))
 
 // var result = fetchData()
-d3.json('originalData.json', function (err, data) {
+d3.json('originalData.json', async function (err, data) {
     // .then(data => {
 
     // console.log("data length ", data.length)
@@ -15,47 +15,13 @@ d3.json('originalData.json', function (err, data) {
     if(err) 
         console.log("error fetching data");
 
-    function HSVtoRGB(h, s, v) {
-        var r, g, b, i, f, p, q, t;
-        if (arguments.length === 1) {
-            s = h.s, v = h.v, h = h.h;
-        }
-        i = Math.floor(h * 6);
-        f = h * 6 - i;
-        p = v * (1 - s);
-        q = v * (1 - f * s);
-        t = v * (1 - (1 - f) * s);
-        switch (i % 6) {
-            case 0: r = v, g = t, b = p; break;
-            case 1: r = q, g = v, b = p; break;
-            case 2: r = p, g = v, b = t; break;
-            case 3: r = p, g = q, b = v; break;
-            case 4: r = t, g = p, b = v; break;
-            case 5: r = v, g = p, b = q; break;
-        }
-        return {
-            r: Math.round(r * 255),
-            g: Math.round(g * 255),
-            b: Math.round(b * 255)
-        };
-    }
-
-    function randomColors(total) {
-        var i = 360 / (total - 1); // distribute the colors evenly on the hue range
-        var r = []; // hold the generated colors
-        for (var x = 0; x < total; x++) {
-            r.push(HSVtoRGB(i * x, 100, 100)); // you can also alternate the saturation and value for even more contrast between the colors
-        }
-        return r;
-    }
-
     const getUniqueData = (key) => {
         return data.map((x) => x[key]).filter((x, i, a) => a.indexOf(x) === i)
     }
 
     let uniqueComputers = getUniqueData("ComputerName").sort()
 
-    let uniqueUpdates = data.map(d => {
+    let uniqueUpdates = await data.map( (d) => {
         let space_count = 0;
         let third_space_index = 0;
         let str = d["Patch Name"]
@@ -65,15 +31,20 @@ d3.json('originalData.json', function (err, data) {
                 third_space_index = str_i;
                 break;
             }
-            if (str[str_i] === " ")
+            
+            // console.log("splits ", str.split(" ").length)
+            
+            if (str[str_i] === " ") {
                 space_count++
+            }
         }
 
         // console.log("third space index ", third_space_index)
         // console.log("patches ", d["Patch Name"]);
 
         return (str.slice(0, third_space_index))
-    }).filter((x, i, a) => a.indexOf(x) === i)
+    }) // .filter((x, i, a) => a.indexOf(x) === i)
+    uniqueUpdates = [...new Set(uniqueUpdates)]
 
     // START OF Testing functions for getting unique colors based on length of 'uniqueUpdates.length'
     const getMyColor = (colorsLength) => {
@@ -93,7 +64,11 @@ d3.json('originalData.json', function (err, data) {
     
     console.log("d3 color", d3.color(myColor(0)))
     
-    function rgbToHex(r, g, b) {
+    function rgbToHex(x) {
+        // console.log("to hex ", x.split("(")[1].split(")")[0].split(","))
+        let r = x.split("(")[1].split(")")[0].split(",")[0]
+        let g = x.split("(")[1].split(")")[0].split(",")[1]
+        let b = x.split("(")[1].split(")")[0].split(",")[2]
         return "#" + (1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1);
     }
     
@@ -101,10 +76,19 @@ d3.json('originalData.json', function (err, data) {
     console.log("d3 color ", myColor(73))
     // END OF Testing functions for getting unique colors based on length of 'uniqueUpdates.length'
     
-    let uniqueColors = randomColors(uniqueUpdates.length)
-    let uniqueHexColors = d3.quantize(d3.interpolateHcl("#d66000", "#f9a9b4"), uniqueUpdates.length)
+    let uniqueHexColors = /*d3.scaleLinear()
+                            .domain([0, uniqueUpdates.length])
+                            .range(["#a9a9a9", "#FFA500", "#FFC0CB"])*/
 
-    console.log("hex colors ", uniqueHexColors[0])
+                        d3.scaleQuantize()
+                            .domain([0,50])
+                            .range(["#5E4FA2", "#3288BD", "#66C2A5", "#ABDDA4", "#E6F598", 
+                            "#FFFFBF", "#FEE08B", "#FDAE61", "#F46D43", "#D53E4F", "#9E0142"]);
+                        
+
+    console.log("test hex ", d3.interpolateViridis(0.91))
+    // console.log("ordinals ", rgbToHex(uniqueHexColors(15)))
+    // console.log("hex colors ", uniqueHexColors[0])
 
     // let rgbRegex = /(?:1?[0-9]{1,2}|2[0-4][0-9]|25[0-5])/
     // console.log("regex test ", myColor(2).match(rgbRegex))
@@ -116,7 +100,6 @@ d3.json('originalData.json', function (err, data) {
 
     console.log("my colors ", getMyColor(100))
     console.log("unique updates ", uniqueUpdates)
-    console.log("unique colors ", uniqueColors)
 
 
     // console.log("derived string ", str.slice(0,29))
@@ -142,6 +125,8 @@ d3.json('originalData.json', function (err, data) {
     // width is default as window width, later resized w.r.t to width of div(check last lines of code)
     width = current_width - margin.left - margin.right
     height = current_height;
+
+    console.log("width ", width)
 
 
     // start loop for multi timelines
@@ -211,17 +196,24 @@ d3.json('originalData.json', function (err, data) {
                                         let uc
                                         for(let i = 0; i < uniqueUpdates.length; i ++) {
                                             if(d["Patch Name"].includes(uniqueUpdates[i])) {
-                                                uc = myColor(i);
+                                                
+                                                // console.log("at i ", i, d["Patch Name"], " ---->>> ", uniqueUpdates[i])
+                                                // 2022-02 Update for Windows 10 Version 20H2 for x64-based Systems (KB5001716)
+                                                
+                                                // uc = rgbToHex(uniqueHexColors(i));
+                                                uc = uniqueHexColors(i)
                                                 break;
+                                            } else {
+                                                uc = "#FFC0CB"
                                             }
                                         }
                                             
-                                        console.log("my uc ", uc)
+                                        // console.log("my uc ", uc)
                                         /* let hexColors = d3.quantize(d3.interpolateHcl("#d66000", "#a9a9b4"), 72)
                                         console.log("hex colors ", hexColors[0])
                                         console.log("d3 color", d3.color(myColor(0))) */
-                                        console.log("uq ", d3.color(uc))
-                                        return d3.color(uc)
+                                        // console.log("uq ", d3.color(uc))
+                                        return uc
                                     })
 
                 .attr("stroke-width", "1.5")
