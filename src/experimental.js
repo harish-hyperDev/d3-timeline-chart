@@ -126,25 +126,30 @@ d3.json('originalData.json', async function (err, data) {
 
             if(changed_width) {
                 console.log('removed class ', chart_id)
-                chart_id.remove();
+                
 
-                svg = d3.select(`.timeline${chart_index}`)
-                        .append("div")
-                            .attr("id", `timeline-chart${chart_index}`)
-                            .append("svg")
-                                .attr("width", width + margin.left + margin.right)
-                                .attr("height", height + margin.top + margin.bottom)
-                                .append("g")
-                                    .attr("class", "fishy")
-                                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                if(Math.abs(changed_width - width) > 20) {
 
-                // console.log("previous width ", width)
+                    chart_id.remove();
+                    width = changed_width
 
-                width = changed_width
+                    console.log("changed width ", changed_width)
+                
 
-                // console.log("changed width ", width)
+                    svg = d3.select(`.timeline${chart_index}`)
+                            .append("div")
+                                .attr("id", `timeline-chart${chart_index}`)
+                                .append("svg")
+                                    .attr("width", width + margin.left + margin.right)
+                                    .attr("height", height + margin.top + margin.bottom)
+                                    .append("g")
+                                        .attr("class", "fishy")
+                                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
                 /* d3.selectAll(".dot").remove()
                 d3.selectAll(".x-axis").remove() */
+
+                } else return
             }
 
             var x = d3.scaleTime()
