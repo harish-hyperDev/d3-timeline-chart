@@ -209,9 +209,6 @@ d3.json('originalData.json', async function (err, data) {
                                         }
                                             
                                         // console.log("my uc ", uc)
-                                        /* let hexColors = d3.quantize(d3.interpolateHcl("#d66000", "#a9a9b4"), 72)
-                                        console.log("hex colors ", hexColors[0])
-                                        console.log("d3 color", d3.color(myColor(0))) */
                                         // console.log("uq ", d3.color(uc))
                                         return uc
                                     })
@@ -275,25 +272,41 @@ d3.json('originalData.json', async function (err, data) {
         // $(this).select(`.computer-id${multidata_index}`).innerHTML = uniqueComputers[multidata_index]
 
         var svg = d3.select(`.timeline${multidata_index}`)
-            .style("overflow", "hidden")
-            .style("resize", "horizontal")
-            .append("div")
-            .attr("id", `timeline-chart${multidata_index}`)
-            .append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-            .append("g")
-            .attr("class", "fishy")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                    .append("div")
+                    .attr("id", `timeline-chart${multidata_index}`)
+                    .append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                    .attr("class", "fishy")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 
         d3.select(`.timeline${multidata_index}`)
             .style("border", "1px solid black")
             .style("margin", "5px 20px")
             .style("border-radius", "7px")
-            .style("resize", "horizontal")
+            .style("overflow", "hidden")
+            // .style("resize", "horizontal")
+            // .style("resize", "horizontal")
 
         console.log("div width ", $(`.timeline${multidata_index}`).width())
+
+        $(`.timeline${multidata_index}`).resizable({
+            handles: 'e, w'
+        });
+
+        $(`.timeline${multidata_index}`).resize( function () {
+            console.log("resized chart ", multidata_index)
+            // $('body').prepend('<div>' + $(`.timeline${multidata_index}`).width() + '</div>');
+        })
+
+
+        /* document.querySelector(`.timeline${multidata_index}`)
+                .addEventListener("resize", () => { 
+                    // console.log("resized chart ", multidata_index) 
+                    $('body').prepend('<div>' + $(`.timeline${multidata_index}`).width() + '</div>');
+                }) */
 
         // changing width of chart w.r.t to width of div
         width = $(`.timeline${multidata_index}`).width() - margin.right
