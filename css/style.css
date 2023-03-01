@@ -35,5 +35,9 @@
     
 }
 
+.ui-resizable-handle:hover {
+    cursor: e-resize;
+}
+
 
 
