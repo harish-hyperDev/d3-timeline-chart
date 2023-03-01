@@ -125,9 +125,8 @@ d3.json('originalData.json', async function (err, data) {
             // so using changed_width as foolproof-condition
 
             if(changed_width) {
-                console.log('removed class ', chart_id)
-                
 
+                // difference of decreased width should be greater than 20 to redraw chart (increases performance)
                 if(Math.abs(changed_width - width) > 20) {
 
                     chart_id.remove();
@@ -146,10 +145,17 @@ d3.json('originalData.json', async function (err, data) {
                                         .attr("class", "fishy")
                                         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-                /* d3.selectAll(".dot").remove()
-                d3.selectAll(".x-axis").remove() */
+                    
+                    // removind and re-adding the resizable
+                    $(`.timeline${chart_index}`).remove('ui-resizable-handle')
+                    $(`.timeline${chart_index}`).resizable({
+                        handles: 'e'
+                    });
+                    
+                    /* d3.selectAll(".dot").remove()
+                    d3.selectAll(".x-axis").remove() */
 
-                } else return
+                } else return       // else, exit from the reDraw function, aids in performance
             }
 
             var x = d3.scaleTime()
@@ -248,6 +254,7 @@ d3.json('originalData.json', async function (err, data) {
             .style("border", "1px solid black")
             .style("margin", "5px 20px")
             .style("border-radius", "7px")
+            .style("border-bottom-right-radius", "0px")
             .style("overflow", "hidden")
 
         console.log("div width ", $(`.timeline${multidata_index}`).width())
@@ -276,8 +283,9 @@ d3.json('originalData.json', async function (err, data) {
         width = $(`.timeline${multidata_index}`).width() - margin.right
 
 
-        if(!calledRedraw)
+        if(!calledRedraw) {
             reDraw(uniqueComputers[multidata_index])
+        }
 
     }
 })
