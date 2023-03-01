@@ -293,7 +293,7 @@ d3.json('originalData.json', async function (err, data) {
         console.log("div width ", $(`.timeline${multidata_index}`).width())
 
         $(`.timeline${multidata_index}`).resizable({
-            handles: 'e, w'
+            handles: 'e'    // previously 'e, w'
         });
 
         $(`.timeline${multidata_index}`).resize( function () {

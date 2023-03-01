@@ -18,62 +18,22 @@
     margin-left: 2.7%;
 }
 
-/* .ui-resizable-handle {
+
+.ui-resizable-handle {
     display: flex;
-    padding: 15px;
-    color: #000;
-    border: 1px solid black;
-} */
-
-/* .ui-resizable-e{
-    position: absolute;
-    float:right;
-    right:100%;
-} */
-
-
-
-.ui-icon {
-    padding: 5px;
-    color: #000;
-
-    /* border: 1px solid black; */
-
-    width: 10px;
-    height: 100%;
-
-    /* padding: 15px; */
-    /* padding-left: 0px; */
-
-    /* background-image: url(../assets/ui-icons_444444_256x240.png); */
-    /* background-image: url(../assets/arrow-18-256-256.png); */
-    /* background-image: url(../assets/corner-bottom-right-icon.png); */
-
-    background-image: url(../assets/ui-icons_444444_256x240.png);
-    transform: rotate(90deg);
-
-    /* transform: rotate(225deg); */
+    justify-content: right;
     float: right;
-    /* height: 100%; */
-    /* display: flex; */
-    /* width: max-content; */
-    /* align-items: flex-end; */
-    /* shape-outside: inset(calc(100% - 100px) 0 0); */
 
-
-    /* display: inline-block; */
-    /* vertical-align: middle;
-    margin-top: -0.25em; */
-
-    position: relative; 
-    /* bottom: 3px; */
-    /* top: 1%; */
-    /* right: 2%; */
-    /* text-indent: -99999px; */
-    /* overflow: hidden; */
+    width: 20px;
+    height: 100%;
+    padding: 5px;
+    
+    background-image: url('../assets/triangle-top-left-icon\ \(1\).png');
     background-repeat: no-repeat;
-    /* z-index: 90; */
+    transform: rotate(180deg);
+    margin: 0px 2px 2px 0px;
+    
 }
-/* .timeline {
-    border: 1px solid black;
-} */
+
+
+
